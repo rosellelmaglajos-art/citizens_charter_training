@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Excellence: RA11032 Citizen's Charter</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+
+  <style>
+    /* --- VISUAL THEME (From Arta Source) --- */
+    body { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+    
+    .certificate-title { font-family: 'Playfair Display', serif; }
+    .certificate-body { font-family: 'Cormorant Garamond', serif; }
+    
+    .fade-in { animation: fadeIn 0.4s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Quiz & Form Styles */
+    .quiz-option { transition: all 0.2s ease; }
+    .quiz-option:hover { transform: translateX(4px); border-color: #0c4a6e !important; box-shadow: 0 4px 16px rgba(12,74,110,0.2) !important; }
+    .component-current { border-color: #f59e0b !important; box-shadow: 0 4px 16px rgba(245,158,11,0.4) !important; font-weight: 700 !important; }
+    
+    /* Evaluation Stars */
+    .rating-star { cursor: pointer; transition: all 0.2s ease; font-size: 2rem; }
+    .rating-star:hover { transform: scale(1.2); }
+    .rating-star.filled { color: #fbbf24; }
+    .rating-star.empty { color: #d1d5db; }
+    
+    /* Video Embed Container */
+    .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.2); margin-bottom: 2rem; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* --- CERTIFICATE STYLES (From Canva Source) --- */
+    .certificate-container {
+      width: 1400px;
+      height: 1000px;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #ffffff 100%);
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.2);
+      border: 1px solid #cbd5e1;
+      margin: 0 auto; /* Center it */
+    }
+    
+    /* --- AI FEATURES --- */
+    #ai-fab {
+        position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+        background: #10a37f; color: white; border-radius: 50%;
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 2000;
+        transition: transform 0.3s;
+    }
+    #ai-fab:hover { transform: scale(1.1); }
+    
+    #ai-chat-window {
+        position: fixed; bottom: 100px; right: 30px; width: 350px; height: 500px;
+        background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        display: none; flex-direction: column; z-index: 2000; overflow: hidden;
+        border: 1px solid #ddd;
+    }
+    .chat-header { background: #10a37f; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+    .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; }
+    .chat-input-area { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; }
+    .chat-msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; max-width: 80%; }
+    .bot-msg { background: #e0e0e0; color: #333; align-self: flex-start; }
+    .user-msg { background: #10a37f; color: white; align-self: flex-end; margin-left: auto; }
+
+    /* Admin Styles */
+    .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; margin-top: 20px; }
+    .data-table th, .data-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+    .data-table th { background: #0c4a6e; color: white; }
+    .ai-badge { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    
+    /* NEW: Admin Analytics Styles */
+    .stat-card { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .stat-val { font-size: 2rem; font-weight: 800; color: #0c4a6e; }
+    .stat-label { color: #64748b; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .progress-bar-bg { width: 100%; background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .progress-bar-fill { height: 100%; background: #0c4a6e; }
+    
+    /* NEW: Modal for Admin Details */
+    #detail-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4000; display: none; justify-content: center; align-items: center; }
+    .modal-content { background: white; width: 80%; max-width: 800px; max-height: 80vh; overflow-y: auto; border-radius: 12px; padding: 30px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+
+    @media print {
+      body * { visibility: hidden; }
+      .certificate-container, .certificate-container * { visibility: visible; }
+      .certificate-container { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        box-shadow: none; 
+        transform: scale(0.75); /* Slight scale adjust for A4/Letter landscape */
+        transform-origin: top left; 
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+ </head>
+ <body class="h-full bg-slate-50 text-slate-900">
+  
+  <div id="app" class="w-full h-full overflow-auto"></div>
+
+  <div id="ai-fab" onclick="toggleChat()"><i class="fas fa-robot fa-2x"></i></div>
+  <div id="ai-chat-window">
+      <div class="chat-header">
+          <span><i class="fas fa-brain"></i> DOTr AI Assistant (Gemini)</span>
+          <i class="fas fa-times" style="cursor:pointer" onclick="toggleChat()"></i>
+      </div>
+      <div class="chat-body" id="chat-body">
+          <div class="chat-msg bot-msg">Hello! I am your AI learning companion powered by Google Gemini. Ask me anything about RA 11032 or the Citizen's Charter!</div>
+      </div>
+      <div class="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Type a question..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          <button onclick="sendChat()" style="background: #10a37f; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;"><i class="fas fa-paper-plane"></i></button>
+      </div>
+  </div>
+
+  <div id="login-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 3000;">
+    <div style="background: white; padding: 40px; border-radius: 10px; width: 350px; text-align: center;">
+        <h2 style="margin-bottom: 20px; font-weight: bold; color: #0c4a6e;">Admin Login</h2>
+        <input type="password" id="admin-pass" placeholder="Enter Password" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px;">
+        <button onclick="verifyAdmin()" style="width: 100%; padding: 10px; background: #0c4a6e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px;">Login</button>
+        <button onclick="document.getElementById('login-modal').style.display='none'" style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="detail-modal">
+      <div class="modal-content">
+          <button onclick="document.getElementById('detail-modal').style.display='none'" style="position: absolute; top: 20px; right: 20px; font-size: 24px; color: #666; border:none; background:none; cursor:pointer;">&times;</button>
+          <h2 class="text-2xl font-bold text-sky-900 mb-6" id="modal-title">Trainee Response Details</h2>
+          <div id="modal-body" class="text-slate-600">Loading data...</div>
+      </div>
+  </div>
+
+  <script>
+    // --- FIREBASE INIT ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsglkyvOo52izdT7JRBKSU3MLuPhGQAFY",
+      authDomain: "dotr-training.firebaseapp.com",
+      projectId: "dotr-training",
+      storageBucket: "dotr-training.firebasestorage.app",
+      messagingSenderId: "159217803126",
+      appId: "1:159217803126:web:ca4c064d94a1130512e457",
+      measurementId: "G-7E8NH1WRJ1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // --- AI PROCTOR ---
+    let aiProctor = {
+        focusLostCount: 0,
+        startTime: Date.now(),
+        interactions: 0,
+        getEngagementScore: function() {
+            let score = 100 - (this.focusLostCount * 5); 
+            if (this.interactions > 50) score += 5;
+            return Math.max(0, Math.min(100, score));
+        }
+    };
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            aiProctor.focusLostCount++;
+            console.log("AI Proctor: User left tab.");
+        }
+    });
+    document.addEventListener("click", () => aiProctor.interactions++);
+
+    // --- AI CHATBOT LOGIC ---
+    const knowledgeBase = {
+        "ra 11032": "Republic Act No. 11032 is the Ease of Doing Business and Efficient Government Service Delivery Act of 2018.",
+        "citizen": "A Citizen's Charter is an official document that details services, requirements, fees, and processing times.",
+        "charter": "The Citizen's Charter is a public document communicating the agency's services, requirements, procedures, processing times, and feedback mechanisms.",
+        "3-7-20": "Processing times: 3 days for simple, 7 days for complex, and 20 days for highly technical transactions.",
+        "fixing": "Fixing is facilitating transactions for gain/advantage and is strictly prohibited. The first offense penalty includes administrative liability and suspension.",
+        "hello": "Hello! I am your AI learning assistant. Ask me about RA 11032 or the Citizen's Charter!",
+        "passing": "You need 75% for module quizzes and 90% for the post-test.",
+        "time": "Processing times are strictly regulated: 3, 7, or 20 working days.",
+        "feedback": "Feedback mechanisms are mandatory, not optional, to ensure continuous improvement."
+    };
+    
+    function toggleChat() {
+        const win = document.getElementById('ai-chat-window');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    async function sendChat() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.toLowerCase().trim();
+        if (!text) return;
+        addMsg(input.value, 'user-msg');
+        input.value = '';
+        
+        setTimeout(() => {
+            let response = "I'm analyzing your query based on the training modules... Try asking about 'RA 11032', 'Processing Time', 'Fixing', or 'Citizen's Charter'.";
+            for (let key in knowledgeBase) {
+                if (text.includes(key)) { response = knowledgeBase[key]; break; }
+            }
+            addMsg(response, 'bot-msg');
+        }, 800);
+    }
+    
+    function addMsg(text, className) {
+        const div = document.createElement('div');
+        div.className = `chat-msg ${className}`;
+        div.innerText = text;
+        const body = document.getElementById('chat-body');
+        body.appendChild(div);
+        body.scrollTop = body.scrollHeight;
+    }
+
+    // --- APP STATE & CONFIG ---
+    let currentScreen = 'login';
+    let currentModule = 0;
+    let currentQuizQuestion = 0;
+    let moduleQuizScores = [0, 0, 0, 0, 0];
+    let pretestScore = 0;
+    let currentDocId = null;
+    let attendanceData = {};
+    let certificateData = {};
+    let userPretestPart2Answers = []; 
+    // State to store user post-test answers for review
+    let userPosttestAnswers = [];
+    
+    // NEW: Detailed Response Tracking
+    let currentModuleResponses = [];
+
+    const PASSING_RATE_MODULE = 0.75; 
+    const PASSING_RATE_POSTTEST = 0.90; 
+    
+    // --- CONTENT DATA ---
+    const pretestMatchingQuestions = [
+      { question: "Service Standards", options: ["A. How citizens can file a complaint.", "B. The list of fees and required documents.", "C. The specific \"promise\" of time and quality.", "D. The overarching goal of the agency.", "E. A visual guide of the step-by-step process."], correct: 2 },
+      { question: "Vision/Mission", options: ["A. How citizens can file a complaint.", "B. The list of fees and required documents.", "C. The specific \"promise\" of time and quality.", "D. The overarching goal of the agency.", "E. A visual guide of the step-by-step process."], correct: 3 },
+      { question: "Redress Mechanism", options: ["A. How citizens can file a complaint.", "B. The list of fees and required documents.", "C. The specific \"promise\" of time and quality.", "D. The overarching goal of the agency.", "E. A visual guide of the step-by-step process."], correct: 0 },
+      { question: "Checklist of Requirements", options: ["A. How citizens can file a complaint.", "B. The list of fees and required documents.", "C. The specific \"promise\" of time and quality.", "D. The overarching goal of the agency.", "E. A visual guide of the step-by-step process."], correct: 1 },
+      { question: "Flowchart", options: ["A. How citizens can file a complaint.", "B. The list of fees and required documents.", "C. The specific \"promise\" of time and quality.", "D. The overarching goal of the agency.", "E. A visual guide of the step-by-step process."], correct: 4 }
+    ];
+
+    const trueFalseStatements = [
+        "A Citizen’s Charter is primarily a legal document for lawyers, not the general public.",
+        "Step-by-step procedures should include the specific office or person responsible for each step.",
+        "Feedback and grievance mechanisms are optional components of a Charter.",
+        "The Charter should specify the maximum time allowed for each transaction.",
+        "Only the head of the agency should be involved in drafting the Charter."
+    ];
+    const trueFalseKey = [false, true, false, true, false];
+
+    const scenarioText = `The Department of Records has a handwritten sign taped to a small side door. The sign reads: "SERVICE: Processing of IDs. INSTRUCTIONS: Submit your forms to any window. TIME: It will take a few days. COMPLAINTS: If you are unhappy, please talk to the guard."`;
+    
+    const modules = [
+        {
+            title: "MODULE 1: WHAT IS A CITIZEN’S CHARTER?",
+            desc: "This module introduces the concept of the Citizen’s Charter as an official document and service standard mandated by Republic Act No. 11032. It explains its purpose as a pledge of transparency and efficiency, detailing the essential information government agencies must provide to citizens—such as services offered, requirements, fees, and processing times.<br><br>Understanding the Citizen’s Charter is crucial because it serves as a contract between the government and the public, ensuring accountability and reducing red tape. Mastery of this module lays the foundation for creating clear, accessible, and compliant charters that improve service delivery and strengthen public trust.",
+            videoEmbed: "https://drive.google.com/file/d/1B2aDfUBs8wmQKCOK4lyp-6ArNiN5_QVn/preview",
+            quiz: [
+                { q: "What is the primary goal of RA 11032?", options: ["A. To increase government revenue through higher business permit fees.", "B. To streamline government services by reducing bureaucratic red tape and averting graft.", "C. To mandate all citizens to register their personal businesses with national agencies.", "D. To provide financial subsidies to small and medium enterprises during the registration process."], correct: 1 },
+                { q: "Which agency is specifically created and tasked to oversee the national implementation of RA 11032?", options: ["A. Anti-Red Tape Authority (ARTA).", "B. Civil Service Commission (CSC).", "C. Both A and B share equal primary oversight for implementation.", "D. Both A and C are incorrect."], correct: 0 },
+                { q: "Under the law, what is the maximum prescribed processing time for \"simple transactions\"?", options: ["A. Seven (7) working days.", "B. Five (5) working days.", "C. Three (3) working days.", "D. Two (2) working days."], correct: 2 },
+                { q: "What is the penalty for the first offense of \"fixing\" or collusion with fixers under RA 11032?", options: ["A. Administrative suspension from the service for six (6) months.", "B. Immediate dismissal from the service.", "C. Perpetual disqualification from holding public office.", "D. Both B and C are correct."], correct: 3 },
+                { q: "How are agencies mandated to publish their service standards (Citizen’s Charter)?", options: ["A. Through conspicuous billboards at the main entrance of the office.", "B. Through official websites and digital platforms.", "C. Both A and B are correct.", "D. Both A and B are incorrect."], correct: 2 },
+                { q: "RA 11032 is also known as the Ease of Doing Business and Efficient Government Service Delivery Act of 2018.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "RA 11032 was enacted and signed into law in the year 2015.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "RA 11032 applies only to national government agencies and does not cover local government units (LGUs) or GOCCs.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "The law mandates the use of technology, such as the establishment of a Central Business Portal, to improve service delivery.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "One of the main objectives of the law is to promote integrity and accountability in government by reducing bureaucratic red tape.", options: ["TRUE", "FALSE"], correct: 0 }
+            ]
+        },
+        {
+            title: "MODULE 2: DESIGNING THE INITIAL SECTIONS",
+            desc: "This module focuses on the foundational elements of the Citizen’s Charter Handbook, including the cover page, first page, and agency profile. It explains the proper formatting and placement of official logos, agency name, and the “Citizen’s Charter” label, as well as the inclusion of key organizational details such as Mandate, Vision, Mission, and Service Pledge. Additionally, it covers the creation of the List of Services and Service Headers, ensuring clarity and easy navigation for citizens.<br><br>Mastering the initial sections is essential because they establish the identity and credibility of the agency while providing citizens with clear, organized, and accessible information. A well-designed introduction sets the tone for transparency and professionalism, reinforcing the agency’s commitment to efficient and accountable service delivery.",
+            videoEmbed: "https://drive.google.com/file/d/1C2ejdr8HM8MRIkc3OnowtkgKU-Fm4yw4/preview",
+            quiz: [
+                { q: "Which of the following best describes the core purpose of the Citizen’s Charter as a \"service contract\"?", options: ["A. To serve as a legally binding document for the collection of additional processing fees.", "B. To provide a comprehensive list of all government employees and their respective salary grades.", "C. To establish a transparent pact that outlines service standards, processing times, and accountability mechanisms for the public.", "D. To act as a marketing tool for the Department to showcase its annual achievements and project milestones."], correct: 2 },
+                { q: "Which combination of information is strictly required to be included in an agency’s Citizen’s Charter?", options: ["A. Step-by-step procedures, required documents, fees to be paid, and the specific person responsible for each step.", "B. Internal office policies, employee attendance logs, and a list of all national holidays.", "C. Historical background of the agency, the organization’s mission-vision, and a map of all local branches.", "D. Both A and C are required under the standardized ARTA template."], correct: 0 },
+                { q: "Which of the following pieces of information is NOT a mandatory requirement for the Citizen’s Charter under RA 11032?", options: ["A. The maximum time to conclude a specific transaction.", "B. The procedure for filing complaints and providing feedback.", "C. The personal contact numbers and home addresses of the service providers.", "D. The specific amount of fees to be paid, if any."], correct: 2 },
+                { q: "Considering the mandate for transparency, which of the following is the most compliant way for an agency to approve and update its Citizen’s Charter?", options: ["A. The charter is approved by a simple majority of the rank-and-file employees and updated every five years.", "B. The charter is reviewed and updated at least once every three years or whenever a new service is introduced.", "C. The charter is approved by the head of the agency and updated only when there is a change in the national administration.", "D. The charter is approved by the Anti-Red Tape Authority (ARTA) and remains static for the duration of the agency's existence."], correct: 1 },
+                { q: "How must the Citizen's Charter be communicated to ensure it reaches all types of clients effectively?", options: ["A. It must be published exclusively in the Official Gazette to maintain legal formality.", "B. It must be written in simple, non-technical language (English, Filipino, or local dialect) and posted in visible, conspicuous areas.", "C. It must be available only upon formal written request to the agency's records officer.", "D. It must be displayed solely on high-resolution digital screens to promote the government's \"paperless\" initiative."], correct: 1 },
+                { q: "The Citizen’s Charter is considered a service contract between the government and the citizens, detailing the expectations for service delivery.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Under RA 11032, agencies are strictly required to display their Citizen's Charter in visible and conspicuous areas, such as the main entrance of their offices.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "The Citizen's Charter is required to include specific complaint and feedback mechanisms to allow for continuous service improvement.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "To ensure digital accessibility, the law mandates that the Citizen's Charter must also be accessible online through the agency's official website.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "The Citizen’s Charter only needs to be written in English to ensure a professional and standardized format across all national agencies.", options: ["TRUE", "FALSE"], correct: 1 }
+            ]
+        },
+        {
+            title: "MODULE 3: ORGANIZING THE SERVICE SPECIFICATIONS",
+            desc: "This module explains how to structure the Service Specifications section of the Citizen’s Charter, which contains all essential details for availing government services. It covers fields such as Service Information, Who May Avail, Checklist of Requirements, Client Steps, and Agency Actions. These elements ensure citizens have complete, accurate, and transparent information about the process.<br><br>Part two of this module continues the discussion on service specifications, focusing on Fees per Step, Processing Time per Step, Person Responsible per Step, Total Fees, and Total Processing Time. It emphasizes accurate fee disclosure, realistic timeframes, and accountability through designated personnel.<br><br>Organizing service specifications properly promotes clarity, accountability, and efficiency. Understanding these components is critical for transparency and integrity in service delivery. By setting clear standards for fees, timelines, and responsibilities, agencies can curb corrupt practices, improve client trust, and comply with RA 11032’s mandate for efficient government transactions.",
+            videoEmbed: "https://drive.google.com/file/d/1-TLC6_nU6B1p1gPpxDm7toQ1GnUffdum/preview",
+            quiz: [
+                { q: "Under RA 11032, what is the prescribed maximum processing time for \"Complex Transactions\"?", options: ["A. Five (5) working days.", "B. Seven (7) working days.", "C. Ten (10) working days.", "D. Twenty (20) working days."], correct: 1 },
+                { q: "Highly technical transactions are subject to a specific time limit. What is the maximum period allowed for these types of services?", options: ["A. Fifteen (15) working days.", "B. Twenty (20) working days.", "C. Thirty (30) working days.", "D. Forty-five (45) working days."], correct: 1 },
+                { q: "When defining a service standard in the Citizen’s Charter, which set of information must be specified to ensure full compliance?", options: ["A. The total number of employees in the division and their current performance ratings.", "B. The step-by-step procedure, required documents, fees to be paid, and the specific officer responsible for each step.", "C. The historical reason for the service and the list of previous applicants for transparency.", "D. Both A and B are mandatory requirements."], correct: 1 },
+                { q: "What are the three (3) official types of transactions categorized under RA 11032?", options: ["A. Easy, Medium, and Hard.", "B. Simple, Complex, and Highly Technical.", "C. Fast, Slow, and Normal.", "D. Basic, Advanced, and Expert."], correct: 1 },
+                { q: "What is the administrative consequence for an official who fails to meet the prescribed service standards for the first time without a valid reason?", options: ["A. Immediate dismissal from the service.", "B. A verbal warning from the Personnel Development Committee (PDC).", "C. Administrative liability and potential suspension from the service for six (6) months.", "D. Mandatory reassignment to a different Regional Office."], correct: 2 },
+                { q: "Service standards define the expected quality, processing time, and fees for every government service provided to the public.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Simple transactions, which only require ministerial actions, should be completed within seven (7) working days.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "Highly technical transactions have no specific time limit due to their complexity and the multi-stage evaluation required.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "To ensure accountability, the Citizen's Charter must clearly state any fees that are to be paid by the client.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Service standards must be realistic and achievable to ensure they can be institutionalized within the agency's performance management system.", options: ["TRUE", "FALSE"], correct: 0 }
+            ]
+        },
+        {
+            title: "MODULE 4: FEEDBACK & COMPLAINTS MECHANISMS",
+            desc: "This module explains how to design the Feedback and Complaints Mechanism section of the Citizen’s Charter. It covers the procedures for submitting feedback, filing complaints, and how agencies process these inputs. It also includes guidelines for providing clear contact information for national feedback and complaints centers such as the Presidential Complaints Center (8888), CSC Contact Center ng Bayan, and ARTA.<br><br>A well-structured feedback and complaints mechanism promotes accountability, transparency, and continuous improvement in government service delivery. It empowers citizens to voice concerns and ensures agencies respond promptly and effectively, reinforcing trust and compliance with RA 11032.",
+            videoEmbed: "https://drive.google.com/file/d/1UuqaVHMp2empFXJIJWjBrrTj-O9Q9E00/preview",
+            quiz: [
+                { q: "Which of the following is the mandated first step for a government agency to begin the reengineering of its systems under RA 11032?", options: ["A. To designate a specific Anti-Red Tape Officer to lead all individual department evaluations.", "B. To conduct a \"Cost-Compliance Analysis\" and \"Time and Motion Study\" to evaluate current transaction systems.", "C. To immediately dismiss all personnel who have been involved in past \"fixing\" incidents.", "D. To upload the existing Citizen's Charter to a social media platform for public commenting."], correct: 1 },
+                { q: "What is the specific role of the Anti-Red Tape Authority (ARTA) in relation to other government agencies?", options: ["A. To act as the primary legal counsel for all government employees accused of graft.", "B. To set salary grades and performance bonuses for agencies that reduce their processing times.", "C. To implement a national policy on anti-red tape, monitor agency compliance, and investigate complaints.", "D. To provide the direct funding for the automation of local government business permitting systems."], correct: 2 },
+                { q: "Under the law, which of the following actions constitutes \"fixing\"?", options: ["A. An employee correcting a typo on a permit to ensure the applicant does not have to return the next day.", "B. Any individual facilitating the speedy completion of a transaction for monetary gain or any other advantage.", "C. A supervisor reviewing a complex transaction to ensure it meets technical health and safety standards.", "D. A security guard directing a citizen to the correct window for a simple transaction."], correct: 1 },
+                { q: "How often must government agencies submit their consolidated Client Satisfaction Measurement (CSM) results to the Authority?", options: ["A. On a quarterly basis to align with the government's fiscal spending reports.", "B. On or before the last working day of January of every year.", "C. Only when the agency's Report Card Survey (RCS) grade falls below a \"passing\" mark.", "D. Every three years, coinciding with the mandatory update of the Citizen’s Charter."], correct: 1 },
+                { q: "Which system is officially used to refer to and handle complaints involving violations of RA 11032 within an agency?", options: ["A. The agency's internal \"Suggestion Box\" found in the lobby.", "B. The Committee on Anti-Red Tape (CART) and/or the agency's Legal Office.", "C. The Human Resource Merit Selection and Promotion Board (HRMSPB).", "D. The personal email of the Department Secretary."], correct: 1 },
+                { q: "All government agencies, including those located abroad (such as embassies), are mandated to comply with RA 11032.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Agencies are required to designate a \"Committee on Anti-Red Tape\" (CART) rather than a single individual officer to ensure compliance.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "The Report Card Survey (RCS) is a holistic tool conducted by ARTA to measure the effectiveness of an agency's Citizen's Charter.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Client feedback is optional, and agencies may choose not to embed satisfaction measurements in their process improvements.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "Non-compliance with the prescribed processing times (3-7-20 days) can result in administrative sanctions, including a six-month suspension for the first offense.", options: ["TRUE", "FALSE"], correct: 0 }
+            ]
+        },
+        {
+            title: "MODULE 5: LIST OF OFFICES: HOW TO INCLUDE THEM",
+            desc: "This module explains how to properly include the List of Offices section in the Citizen’s Charter Handbook. It details the requirements for listing all offices covered by the charter, along with their addresses and contact information (telephone numbers and email addresses). It also highlights the importance of providing accurate details for easy access and compliance, and introduces the Certificate of Compliance (CoC) submission process to ensure adherence to RA 11032.<br><br>Including a complete and accurate list of offices ensures accessibility and transparency, allowing citizens to easily locate and contact the appropriate offices for their transactions. It also reinforces compliance with legal requirements, helping agencies maintain accountability and meet annual reporting deadlines.",
+            videoEmbed: "https://drive.google.com/file/d/1VuaQCeBPyTCiELbbtkCjmoVgd_WRiNwb/preview",
+            quiz: [
+                { q: "To achieve a \"PRIME-HRM\" culture of excellence, which technology would most effectively bridge the gap between internal processing and client transparency?", options: ["A. A closed-circuit television (CCTV) system for monitoring employee attendance.", "B. An Integrated Electronic Business Permits and Licensing System (eBPLS) or eGovPH Super App integration.", "C. A private internal database accessible only to Division Chiefs.", "D. Both A and C are incorrect."], correct: 1 },
+                { q: "Which of the following is considered a \"best practice\" for ensuring that a government agency stays responsive to the evolving needs of its citizens?", options: ["A. Limiting the Citizen's Charter updates to once every decade to maintain consistency.", "B. Implementing a \"No Noon Break\" policy and a visible Public Assistance and Complaints Desk (PACD).", "C. Relying solely on internal audits without conducting external Report Card Surveys (RCS).", "D. Both A and B are incorrect."], correct: 1 },
+                { q: "What is the most critical factor in improving client satisfaction within the public sector, according to the SERVQUAL dimensions?", options: ["A. Increasing the physical size of the office and adding more luxury amenities.", "B. Ensuring high levels of assurance and empathy through competent and helpful staff.", "C. Mandating that all transactions be completed in under 60 seconds, regardless of complexity.", "D. Both A and C are incorrect."], correct: 1 },
+                { q: "Which of the following is NOT a recommended best practice for a government agency aiming for service excellence?", options: ["A. Establishing a Committee on Anti-Red Tape (CART) to monitor compliance.", "B. Allowing \"voluntary\" facilitators to help citizens navigate the building for a small tip.", "C. Using Data Analytics to identify bottlenecks in the 3-7-20 day processing cycle.", "D. Adopting ISO 9001:2015 Quality Management Systems (QMS)."], correct: 1 },
+                { q: "How do feedback mechanisms, such as the Client Satisfaction Measurement (CSM), contribute to the principle of \"Continuous Improvement\"?", options: ["A. They provide a legal basis for the immediate termination of any employee receiving a negative comment.", "B. They offer evidence-based insights that allow agencies to identify specific service gaps and reengineer processes.", "C. They serve as the primary source for the agency's annual social media marketing content.", "D. Both A and C are incorrect."], correct: 1 },
+                { q: "Continuous improvement is a key principle of Total Quality Management (TQM) and is essential for maintaining global competitiveness in government.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Employee training is unnecessary for service excellence because the law (RA 11032) primarily focuses on automated systems and not human behavior.", options: ["TRUE", "FALSE"], correct: 1 },
+                { q: "Feedback mechanisms like drop boxes and online surveys are only useful if the agency actually uses the data to inform its Improvement Action Plan.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "Best practices in service delivery involve prioritising the needs of the users (citizens) rather than the administrative convenience of the government.", options: ["TRUE", "FALSE"], correct: 0 },
+                { q: "A \"Service Delivery Excellence Program\" (SDEP) is only required for agencies that have already achieved an \"Outstanding\" rating in their surveys.", options: ["TRUE", "FALSE"], correct: 1 }
+            ]
+        }
+    ];
+
+    const evaluationItems = [
+        "The course objectives were clearly stated and easy to understand.",
+        "The sequencing of the topics displayed good flow, logic and organization.",
+        "Efforts were made to relate the subject/topic to real life situations.",
+        "I was informed of the course schedule, objective and requirements.",
+        "Efforts were exerted to effectively deliver the program/course.",
+        "All training materials were relevant to the course objectives.",
+        "Training materials and activities were well prepared.",
+        "The contents were updated and accurate.",
+        "Necessary training materials were provided.",
+        "The setup is comfortable, accessible, and free of distractions.",
+        "The learning gained from this training will be beneficial at work.",
+        "I learned new knowledge and skills from the training.",
+        "The learning gained will contribute to my personal development.",
+        "The online course met my expectations.",
+        "I will recommend this program to my co-worker."
+    ];
+
+    // --- RENDER FUNCTIONS ---
+    
+    function render() {
+        const app = document.getElementById('app');
+        let content = '';
+        if(currentScreen === 'login') content = renderLogin();
+        else if(currentScreen === 'welcome') content = renderWelcome();
+        else if(currentScreen === 'attendance') content = renderAttendance();
+        else if(currentScreen === 'pretest') content = renderPretest();
+        else if(currentScreen === 'modules') content = renderModules();
+        else if(currentScreen === 'module-content') content = renderModuleContent();
+        else if(currentScreen === 'module-quiz') content = renderModuleQuiz();
+        else if(currentScreen === 'posttest') content = renderPosttest();
+        else if(currentScreen === 'posttest-review') content = renderPosttestReview();
+        else if(currentScreen === 'evaluation') content = renderEvaluation();
+        else if(currentScreen === 'certificate') content = renderCertificate();
+        else if(currentScreen === 'admin') content = renderAdmin();
+        
+        app.innerHTML = content;
+        
+        if(currentScreen === 'certificate') {
+            setTimeout(() => {
+                const qrContainer = document.getElementById("qrcode");
+                if (qrContainer) {
+                    new QRCode(qrContainer, { 
+                        text: `CERT-${currentDocId}|Name:${attendanceData.fullName}|Date:${new Date().toLocaleDateString()}`, 
+                        width: 100, 
+                        height: 100,
+                        colorDark: "#0c4a6e",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            }, 100);
+        }
+    }
+
+    // Using Arta Layouts for everything EXCEPT Certificate
+    function renderLogin() {
+        return `
+        <div class="fade-in h-full flex flex-col bg-gradient-to-br from-sky-900 via-sky-800 to-sky-700">
+            <div class="flex-1 flex items-center justify-center p-8">
+                <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-12 text-center">
+                    <div class="flex justify-center gap-8 mb-8">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Department_of_Transportation_%28Philippines%29.svg/1200px-Department_of_Transportation_%28Philippines%29.svg.png" class="w-20">
+                        <img src="https://bagongpilipinasmediahub.ph/wp-content/uploads/2023/12/bagong-pilipinas-logo.png" class="w-20">
+                    </div>
+                    <h1 class="text-3xl font-extrabold text-sky-900 mb-2">Service Excellence</h1>
+                    <p class="text-slate-500 mb-8">Sign in to continue your training</p>
+                    <form onsubmit="handleLogin(event)">
+                        <input type="email" id="loginEmail" required placeholder="Enter your email address" class="w-full p-4 border-2 border-slate-200 rounded-lg mb-4 text-lg">
+                        <button type="submit" id="loginBtn" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl text-lg hover:bg-sky-800 transition shadow-lg">Continue →</button>
+                    </form>
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <a onclick="document.getElementById('login-modal').style.display='flex'" class="text-slate-400 text-sm cursor-pointer hover:text-sky-900">Admin Access</a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function renderWelcome() {
+        return `
+        <div class="fade-in h-full flex flex-col bg-gradient-to-br from-sky-900 via-sky-800 to-sky-700 p-8">
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-12 w-full mt-10">
+                <h1 class="text-4xl font-extrabold text-sky-900 text-center mb-4">Service Excellence</h1>
+                <p class="text-center text-sky-600 font-bold uppercase tracking-widest mb-8">Department of Transportation</p>
+                <div class="bg-sky-50 p-8 rounded-2xl border-l-4 border-sky-900 mb-8">
+                    <p class="text-xl font-bold text-sky-900 mb-4">Welcome to the Service Excellence Training Course</p>
+                    <p class="text-slate-600 leading-relaxed">The proper preparation of a Citizen’s Charter, as mandated by Republic Act No. 11032, ensures transparency, efficiency, and accountability in government transactions. This course will guide you through the principles and practices of service excellence.</p>
+                </div>
+                
+                <h3 class="font-bold text-sky-900 text-lg mb-4">Course Objectives:</h3>
+                <ul class="list-disc pl-5 mb-8 text-slate-700 space-y-2">
+                    <li>Understand the Legal Basis of RA 11032</li>
+                    <li>Learn the Key Components of a Citizen's Charter</li>
+                    <li>Master the Five Core Modules</li>
+                    <li>Develop Practical Skills to draft and update Charters</li>
+                </ul>
+
+                <h3 class="font-bold text-sky-900 text-lg mb-4">Introductory Video:</h3>
+                <div class="video-container">
+                    <iframe src="https://drive.google.com/file/d/1ynq2Uz3n8y0CfCa2fv4uBsgXBWQfON3L/preview"></iframe>
+                </div>
+
+                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-8 flex items-center gap-4">
+                    <i class="fas fa-robot text-yellow-600 text-2xl"></i>
+                    <div>
+                        <strong class="text-yellow-800">AI Proctor Active:</strong>
+                        <p class="text-sm text-yellow-800">Your engagement is being monitored. Please keep this tab active.</p>
+                    </div>
+                </div>
+                <button onclick="currentScreen='attendance'; render()" class="w-full p-5 bg-gradient-to-r from-sky-900 to-sky-700 text-white font-bold rounded-xl text-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">Begin Training Course →</button>
+            </div>
+        </div>`;
+    }
+
+    function renderAttendance() {
+        return `
+        <div class="fade-in min-h-full bg-slate-50 p-8">
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-sky-900 mb-2">Attendance Form</h2>
+                    <p class="text-slate-500">Please complete all required information</p>
+                </div>
+                <form onsubmit="handleAttendance(event)" class="space-y-6">
+                    <div>
+                        <label class="block font-semibold text-sky-900 mb-2">Full Name</label>
+                        <input type="text" id="fname" required placeholder="FIRST NAME, MIDDLE INITIAL, LAST NAME" class="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-sky-900 outline-none">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block font-semibold text-sky-900 mb-2">Gender</label>
+                            <select id="gender" required class="w-full p-3 border-2 border-slate-200 rounded-lg bg-white">
+                                <option value="">Select...</option>
+                                <option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-sky-900 mb-2">Employment Type</label>
+                            <select id="emp" required class="w-full p-3 border-2 border-slate-200 rounded-lg bg-white">
+                                <option value="">Select...</option>
+                                <option>Permanent</option><option>Co-terminus</option><option>Contractual</option><option>Job Order</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sky-900 mb-2">Position</label>
+                        <input type="text" id="pos" required class="w-full p-3 border-2 border-slate-200 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-sky-900 mb-2">Office/Division</label>
+                        <input type="text" id="off" required class="w-full p-3 border-2 border-slate-200 rounded-lg">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block font-semibold text-sky-900 mb-2">Complete ID Number</label>
+                            <input type="text" id="idn" required class="w-full p-3 border-2 border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-sky-900 mb-2">Mobile Number</label>
+                            <input type="tel" id="mob" required class="w-full p-3 border-2 border-slate-200 rounded-lg">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full mt-6 p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Submit & Start Pre-test</button>
+                </form>
+            </div>
+        </div>`;
+    }
+
+    function renderPretest() {
+        const q = pretestMatchingQuestions[currentQuizQuestion];
+        if (currentQuizQuestion < 5) {
+            return `
+            <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-10 border border-sky-100">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-extrabold text-sky-900 flex items-center gap-3">
+                            <span class="bg-sky-900 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg">?</span>
+                            Pre-test Part I: Matching
+                        </h2>
+                        <span class="font-bold text-white bg-sky-900 px-4 py-2 rounded-full">${currentQuizQuestion + 1} / 5</span>
+                    </div>
+                    
+                    <div class="bg-sky-50 p-6 rounded-xl border-l-4 border-sky-900 mb-8">
+                        <p class="text-xl font-bold text-sky-900 mb-2">Match the Charter Component</p>
+                        <p class="text-slate-600">Select the component on the left, then select its purpose on the right.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 mb-8">
+                        <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-400">
+                            <h4 class="font-bold text-amber-800 uppercase text-center mb-4">📋 Charter Components</h4>
+                            <div class="flex flex-col gap-3">
+                                ${pretestMatchingQuestions.map((pq, idx) => `
+                                    <div class="p-4 bg-white rounded-xl border-2 ${idx === currentQuizQuestion ? 'border-amber-500 shadow-lg font-bold' : 'border-amber-200'} cursor-default">
+                                        ${idx + 1}. ${pq.question}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-sky-50 p-6 rounded-2xl border-2 border-sky-600">
+                            <h4 class="font-bold text-sky-800 uppercase text-center mb-4">🎯 Primary Purposes</h4>
+                            <div class="flex flex-col gap-3">
+                                ${q.options.map((opt, idx) => `
+                                    <div onclick="handlePretestAnswer(${idx})" class="quiz-option p-4 bg-white rounded-xl border-2 border-sky-200 cursor-pointer flex gap-3 items-start">
+                                        <span class="font-bold text-sky-700">${String.fromCharCode(65+idx)}.</span>
+                                        <span class="text-slate-700 font-medium">${opt.replace(/^[A-E]\.\s*/, '')}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        } else if (currentQuizQuestion === 5) {
+            return `
+            <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                    <h2 class="text-2xl font-extrabold text-sky-900 mb-4">Pre-test Part II: True or False</h2>
+                    <p class="mb-6 text-slate-600">Read the statements below. Select T if you think the statement is true and F if false.</p>
+                    <form onsubmit="submitPretestPart2(event)">
+                        ${trueFalseStatements.map((stmt, i) => `
+                            <div class="mb-4 pb-4 border-b border-slate-100 flex justify-between items-center">
+                                <p class="w-3/4 text-slate-800 font-medium">${i+1}. ${stmt}</p>
+                                <select id="pt2-${i}" required class="p-2 border rounded-lg bg-sky-50 font-bold text-sky-900">
+                                    <option value="">Select...</option>
+                                    <option value="T">T</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                        `).join('')}
+                        <button type="submit" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Next Section →</button>
+                    </form>
+                </div>
+            </div>`;
+        } else {
+            return `
+            <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                    <h2 class="text-2xl font-extrabold text-sky-900 mb-4">Pre-test Part III: Scenario Analysis</h2>
+                    <div class="bg-amber-50 p-6 rounded-xl border border-amber-200 mb-6">
+                        <h4 class="font-bold text-amber-900 mb-2">SCENARIO:</h4>
+                        <p class="italic text-slate-700">${scenarioText}</p>
+                    </div>
+                    <label class="block font-bold text-sky-900 mb-2">Identify 5 errors or missing pieces of information:</label>
+                    <textarea id="scenarioAns" rows="6" class="w-full p-4 border-2 border-slate-200 rounded-xl mb-6" placeholder="1. ...&#10;2. ..."></textarea>
+                    <button onclick="submitPretestPart3()" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Submit Pre-test</button>
+                </div>
+            </div>`;
+        }
+    }
+
+    function renderModules() {
+        const allPassed = moduleQuizScores.every(s => s >= 8); 
+        
+        return `
+        <div class="fade-in min-h-full bg-slate-50 p-8">
+            <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+                <h2 class="text-3xl font-bold text-center text-sky-900 mb-2">Learning Modules</h2>
+                <p class="text-center text-slate-500 mb-8">Complete all modules with 75% passing (8/10) to unlock post-test.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    ${modules.map((m, i) => {
+                        const passed = moduleQuizScores[i] >= 8;
+                        return `
+                        <div onclick="startModule(${i})" class="bg-white border-2 ${passed ? 'border-green-500' : 'border-slate-200'} rounded-2xl p-6 cursor-pointer hover:shadow-lg transition">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-sky-700">Module ${i+1}</span>
+                                ${passed ? '<span class="text-green-600 text-xl">✓</span>' : ''}
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg mb-2 line-clamp-2">${m.title}</h3>
+                            <p class="text-slate-500 text-sm mb-4">Score: ${moduleQuizScores[i]}/10</p>
+                            <div class="text-sm font-bold ${passed ? 'text-green-600' : 'text-sky-600'}">
+                                ${passed ? 'Completed' : 'Start Module →'}
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+                ${allPassed ? `
+                    <button onclick="currentScreen='posttest'; currentQuizQuestion=0; userPosttestAnswers=[]; render()" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Proceed to Post-test</button>
+                ` : `
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg text-center text-amber-800 font-semibold">Complete all modules to proceed.</div>
+                `}
+            </div>
+        </div>`;
+    }
+
+    function renderModuleContent() {
+        const m = modules[currentModule];
+        return `
+        <div class="fade-in min-h-full bg-slate-50 p-8">
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+                <button onclick="currentScreen='modules'; render()" class="text-sky-700 font-bold mb-6">← Back to Modules</button>
+                <span class="bg-sky-900 text-white px-3 py-1 rounded-md text-sm font-bold">Module ${currentModule+1}</span>
+                <h2 class="text-3xl font-bold text-slate-900 mt-2 mb-6">${m.title}</h2>
+                
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg mb-8">
+                    <h3 class="font-bold text-amber-800 mb-2">⚠️ Instructions</h3>
+                    <p class="text-amber-900">Watch the video completely. You must achieve 8/10 (75%) to pass.</p>
+                </div>
+
+                <div class="video-container">
+                    <iframe src="${m.videoEmbed}"></iframe>
+                </div>
+
+                <div class="prose max-w-none text-slate-700 mb-8 leading-relaxed">${m.desc}</div>
+                
+                <button onclick="currentScreen='module-quiz'; currentQuizQuestion=0; currentModuleResponses=[]; render()" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Take Module Quiz</button>
+            </div>
+        </div>`;
+    }
+
+    function renderModuleQuiz() {
+        const m = modules[currentModule];
+        const q = m.quiz[currentQuizQuestion];
+        return `
+        <div class="fade-in min-h-full bg-sky-50 p-8">
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-sky-900">Module ${currentModule+1} Quiz</h2>
+                    <span class="bg-sky-900 text-white px-3 py-1 rounded-full text-sm">${currentQuizQuestion+1} / 10</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full mb-8"><div class="bg-sky-600 h-2 rounded-full transition-all" style="width: ${(currentQuizQuestion/10)*100}%"></div></div>
+                
+                <p class="text-xl font-semibold text-slate-800 mb-8">${q.q}</p>
+                
+                <div class="flex flex-col gap-4">
+                    ${q.options.map((opt, i) => `
+                        <div onclick="handleModuleAnswer(${i})" class="quiz-option p-5 border-2 border-slate-200 rounded-xl cursor-pointer bg-white">
+                            ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function renderPosttest() {
+        if (currentQuizQuestion < 5) {
+             const q = pretestMatchingQuestions[currentQuizQuestion];
+             return `
+            <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-10 border border-sky-100">
+                     <h2 class="text-2xl font-extrabold text-sky-900 mb-8">Post-Test Part I: Matching (${currentQuizQuestion+1}/5)</h2>
+                     <div class="bg-sky-50 p-6 rounded-xl border-l-4 border-sky-900 mb-8">
+                        <p class="text-xl font-bold text-sky-900 mb-2">Match the Charter Component</p>
+                    </div>
+                     <div class="grid grid-cols-2 gap-8 mb-8">
+                        <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-400">
+                            <div class="flex flex-col gap-3">
+                                ${pretestMatchingQuestions.map((pq, idx) => `
+                                    <div class="p-4 bg-white rounded-xl border-2 ${idx === currentQuizQuestion ? 'border-amber-500 shadow-lg font-bold' : 'border-amber-200'} cursor-default">
+                                        ${idx + 1}. ${pq.question}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="bg-sky-50 p-6 rounded-2xl border-2 border-sky-600">
+                            <div class="flex flex-col gap-3">
+                                ${q.options.map((opt, idx) => `
+                                    <div onclick="handlePosttestMatching(${idx})" class="quiz-option p-4 bg-white rounded-xl border-2 border-sky-200 cursor-pointer flex gap-3 items-start">
+                                        <span class="font-bold text-sky-700">${String.fromCharCode(65+idx)}.</span>
+                                        <span class="text-slate-700 font-medium">${opt.replace(/^[A-E]\.\s*/, '')}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        } else if (currentQuizQuestion === 5) {
+            return `
+            <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                    <h2 class="text-2xl font-extrabold text-sky-900 mb-4">Post-test Part II: True or False</h2>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-sky-900 text-white"><th class="p-4 rounded-tl-lg">Statement</th><th class="p-4">Before</th><th class="p-4 rounded-tr-lg">After (Now)</th></tr>
+                        </thead>
+                        <tbody>
+                            ${trueFalseStatements.map((stmt, i) => `
+                                <tr class="border-b border-slate-100">
+                                    <td class="p-4 text-slate-800 font-medium">${i+1}. ${stmt}</td>
+                                    <td class="p-4 text-slate-500">${userPretestPart2Answers[i] || '-'}</td>
+                                    <td class="p-4">
+                                        <select id="post2-${i}" required class="p-2 border rounded-lg bg-sky-50 font-bold text-sky-900 w-full">
+                                            <option value="">Select...</option>
+                                            <option value="T">T</option>
+                                            <option value="F">F</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <button onclick="submitPosttestPart2()" class="w-full mt-6 p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Next Section →</button>
+                </div>
+            </div>`;
+        } else {
+            return `
+             <div class="fade-in min-h-full bg-sky-50 p-8">
+                <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                    <h2 class="text-2xl font-extrabold text-sky-900 mb-4">Post-test Part III: Scenario Analysis</h2>
+                    <div class="bg-amber-50 p-6 rounded-xl border border-amber-200 mb-6">
+                        <h4 class="font-bold text-amber-900 mb-2">SCENARIO:</h4>
+                        <p class="italic text-slate-700">${scenarioText}</p>
+                    </div>
+                    <label class="block font-bold text-sky-900 mb-2">Identify 5 errors:</label>
+                    <textarea id="postScenarioAns" rows="6" class="w-full p-4 border-2 border-slate-200 rounded-xl mb-6" placeholder="1. ...&#10;2. ..."></textarea>
+                    
+                    <button onclick="submitPosttestFinal()" class="w-full p-4 bg-sky-900 text-white font-bold rounded-xl hover:bg-sky-800 transition">Submit Post-test</button>
+                </div>
+            </div>`;
+        }
+    }
+
+    function renderPosttestReview() {
+        return `
+        <div class="fade-in min-h-full bg-slate-50 p-8">
+            <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+                <h1 class="text-3xl font-extrabold text-center text-green-700 mb-2">Excellent Work!</h1>
+                <p class="text-center text-slate-500 mb-8">You achieved a perfect/passing score! Here are the correct answers for your review.</p>
+                
+                <div class="space-y-8">
+                    <div class="border border-slate-200 rounded-xl p-6">
+                        <h3 class="font-bold text-sky-900 text-xl mb-4 border-b pb-2">Part I: Matching - Correct Answers</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             ${pretestMatchingQuestions.map((pq, idx) => `
+                                <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                                    <p class="font-bold text-slate-800 mb-1">${idx + 1}. ${pq.question}</p>
+                                    <p class="text-green-700 font-semibold text-sm">Correct Answer: ${String.fromCharCode(65 + pq.correct)} - ${pq.options[pq.correct].replace(/^[A-E]\.\s*/, '')}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-6">
+                        <h3 class="font-bold text-sky-900 text-xl mb-4 border-b pb-2">Part II: True or False - Key</h3>
+                         <ul class="space-y-3">
+                            ${trueFalseStatements.map((stmt, i) => `
+                                <li class="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
+                                    <span class="text-slate-800 w-3/4 text-sm">${i+1}. ${stmt}</span>
+                                    <span class="font-bold text-green-700 bg-white px-3 py-1 rounded shadow-sm border border-green-300">
+                                        ${trueFalseKey[i] ? 'TRUE' : 'FALSE'}
+                                    </span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-6">
+                        <h3 class="font-bold text-sky-900 text-xl mb-4 border-b pb-2">Part III: Scenario Analysis - Key Concepts</h3>
+                        <div class="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-4">
+                            <p class="text-sm italic text-slate-700">${scenarioText}</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <p class="font-bold text-green-800 mb-2">Correct Answers should identify these errors:</p>
+                            <ul class="list-disc pl-5 text-green-700 space-y-1">
+                                <li><strong>Visibility:</strong> Sign is handwritten/taped (should be professional).</li>
+                                <li><strong>Time:</strong> "Few days" is vague (must be specific, e.g., 3-7-20 days).</li>
+                                <li><strong>Location/Person:</strong> "Any window" is unclear (needs specific person/window).</li>
+                                <li><strong>Feedback:</strong> "Talk to guard" is informal (needs proper feedback mechanism).</li>
+                                <li><strong>Requirements:</strong> No checklist of requirements posted.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                     <button onclick="currentScreen='evaluation'; render()" class="px-8 py-4 bg-sky-900 text-white font-bold rounded-xl text-lg hover:bg-sky-800 transition shadow-lg">
+                        Proceed to Evaluation →
+                    </button>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    function renderEvaluation() {
+        return `
+        <div class="fade-in min-h-full bg-slate-50 p-8">
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10">
+                <h2 class="text-3xl font-bold text-center text-sky-900 mb-2">Course Evaluation</h2>
+                <p class="text-center text-slate-500 mb-8">Please rate your experience (1 = Lowest, 5 = Highest)</p>
+                
+                <form onsubmit="handleEvaluation(event)" class="space-y-6">
+                    ${evaluationItems.map((item, i) => `
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                            <p class="font-semibold text-slate-800 mb-4">${i+1}. ${item}</p>
+                            <div class="flex justify-center gap-4 rating-container" data-idx="${i}">
+                                ${[1,2,3,4,5].map(star => `
+                                    <span onclick="rateItem(${i}, ${star})" class="rating-star empty text-3xl text-slate-300 hover:text-amber-400" data-val="${star}">★</span>
+                                `).join('')}
+                            </div>
+                            <input type="hidden" id="eval-${i}" required>
+                        </div>
+                    `).join('')}
+                    
+                    <button type="submit" class="w-full p-5 bg-gradient-to-r from-sky-900 to-sky-700 text-white font-bold rounded-xl shadow-lg mt-6">Generate Certificate →</button>
+                </form>
+            </div>
+        </div>`;
+    }
+
+    // --- RENDER CERTIFICATE FUNCTION (EXACTLY AS REQUESTED WITH ALL SVGS) ---
+    function renderCertificate() {
+      const signatoryName = "ERIKA LLYSSA G. MAGPAYO";
+      const signatoryTitle = "Director IV for Administrative Service concurrent\nManagement Information Systems Service";
+      
+      return `
+        <div style="min-height: 100%; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%); padding: 3rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          
+          <div class="no-print" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 3px solid #f59e0b; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; max-width: 1400px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+            <div style="display: flex; align-items: start; gap: 1.5rem;">
+              <div style="flex-shrink: 0; width: 60px; height: 60px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 4px 12px rgba(245,158,11,0.3);">
+                📸
+              </div>
+              <div style="flex: 1;">
+                <h3 style="font-size: 20px; font-weight: 800; color: #92400e; margin: 0 0 0.75rem 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                  ⚠️ Important: Screenshot Required for Verification
+                </h3>
+                <p style="font-size: 16px; color: #78350f; line-height: 1.7; margin: 0 0 1rem 0; font-weight: 500;">
+                  Please take a <strong>screenshot of this certificate</strong> before downloading. The screenshot must be uploaded to the verification folder for official signature and validation.
+                </p>
+                <button onclick="window.open('https://drive.google.com/drive/folders/1xJXc23UB4E4X7rqD8_7Qlv3k5t_3Rm43?usp=sharing', '_blank', 'noopener,noreferrer')"
+                        style="padding: 0.875rem 1.75rem; font-size: 16px; font-weight: 700; color: white; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border: none; border-radius: 0.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(30,58,138,0.4); transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;">
+                  📤 Upload Screenshot to Verification Folder
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="certificate-container" style="position: relative; overflow: hidden;">
+            <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;" viewBox="0 0 1400 1000" preserveAspectRatio="none">
+              <circle cx="0" cy="0" r="300" fill="url(#navyGold1)" opacity="0.06"/>
+              <circle cx="1400" cy="0" r="300" fill="url(#navyGold2)" opacity="0.06"/>
+              <circle cx="0" cy="1000" r="280" fill="url(#navyGold3)" opacity="0.06"/>
+              <circle cx="1400" cy="1000" r="280" fill="url(#navyGold4)" opacity="0.06"/>
+              
+              <polygon points="0,0 150,0 0,150" fill="#1e3a8a" opacity="0.08"/>
+              <polygon points="1400,0 1250,0 1400,150" fill="#1e40af" opacity="0.08"/>
+              <polygon points="0,1000 150,1000 0,850" fill="#1e40af" opacity="0.08"/>
+              <polygon points="1400,1000 1250,1000 1400,850" fill="#1e3a8a" opacity="0.08"/>
+              
+              <circle cx="700" cy="500" r="350" fill="none" stroke="#daa520" stroke-width="1" opacity="0.08"/>
+              <circle cx="700" cy="500" r="380" fill="none" stroke="#b8860b" stroke-width="1" opacity="0.06"/>
+              <circle cx="700" cy="500" r="410" fill="none" stroke="#daa520" stroke-width="1" opacity="0.04"/>
+              
+              <line x1="100" y1="500" x2="300" y2="500" stroke="#daa520" stroke-width="2" opacity="0.1"/>
+              <line x1="1100" y1="500" x2="1300" y2="500" stroke="#daa520" stroke-width="2" opacity="0.1"/>
+              
+              <defs>
+                <linearGradient id="navyGold1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#daa520;stop-opacity:0.3" />
+                </linearGradient>
+                <linearGradient id="navyGold2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#daa520;stop-opacity:0.3" />
+                </linearGradient>
+                <linearGradient id="navyGold3" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#b8860b;stop-opacity:0.3" />
+                </linearGradient>
+                <linearGradient id="navyGold4" x1="100%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#b8860b;stop-opacity:0.3" />
+                </linearGradient>
+              </defs>
+            </svg>
+            
+            <div style="position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px; border: 5px solid #1e3a8a; z-index: 1; box-shadow: inset 0 0 0 3px #daa520;"></div>
+            <div style="position: absolute; top: 52px; left: 52px; right: 52px; bottom: 52px; border: 2px solid #1e40af; z-index: 1;"></div>
+            <div style="position: absolute; top: 58px; left: 58px; right: 58px; bottom: 58px; border: 1px solid #b8860b; z-index: 1;"></div>
+            
+            <div style="position: absolute; top: 32px; left: 32px; width: 80px; height: 80px; border-left: 6px solid #daa520; border-top: 6px solid #daa520; z-index: 2;">
+              <div style="position: absolute; top: 10px; left: 10px; width: 20px; height: 20px; background: #1e3a8a; border-radius: 50%;"></div>
+            </div>
+            <div style="position: absolute; top: 32px; right: 32px; width: 80px; height: 80px; border-right: 6px solid #daa520; border-top: 6px solid #daa520; z-index: 2;">
+              <div style="position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; background: #1e3a8a; border-radius: 50%;"></div>
+            </div>
+            <div style="position: absolute; bottom: 32px; left: 32px; width: 80px; height: 80px; border-left: 6px solid #daa520; border-bottom: 6px solid #daa520; z-index: 2;">
+              <div style="position: absolute; bottom: 10px; left: 10px; width: 20px; height: 20px; background: #1e3a8a; border-radius: 50%;"></div>
+            </div>
+            <div style="position: absolute; bottom: 32px; right: 32px; width: 80px; height: 80px; border-right: 6px solid #daa520; border-bottom: 6px solid #daa520; z-index: 2;">
+              <div style="position: absolute; bottom: 10px; right: 10px; width: 20px; height: 20px; background: #1e3a8a; border-radius: 50%;"></div>
+            </div>
+            
+            <div style="position: relative; z-index: 3; padding: 65px 85px; display: flex; flex-direction: column; height: 100%;">
+              <div style="display: flex; justify-content: center; align-items: center; gap: 2.5rem; margin-bottom: 1.25rem;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Department_of_Transportation_%28Philippines%29.svg/1200px-Department_of_Transportation_%28Philippines%29.svg.png" alt="DOT Logo" style="width: 75px; height: 75px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));" onerror="this.style.display='none';">
+                <img src="https://bagongpilipinasmediahub.ph/wp-content/uploads/2023/12/bagong-pilipinas-logo.png" alt="Bagong Pilipinas Logo" style="width: 75px; height: 75px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));" onerror="this.style.display='none';">
+              </div>
+              
+              <div style="text-align: center; margin-bottom: 1rem;">
+                <div style="position: relative; display: inline-block; margin-bottom: 0.75rem;">
+                  <div style="position: absolute; top: -8px; left: -15px; right: -15px; bottom: -8px; background: linear-gradient(135deg, rgba(218,165,32,0.15) 0%, rgba(184,134,11,0.15) 100%); border-radius: 0.75rem; transform: rotate(-1deg);"></div>
+                  <div style="position: relative; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); padding: 0.75rem 3rem; border-radius: 0.5rem; border: 3px solid #daa520; box-shadow: 0 6px 20px rgba(30,58,138,0.4);">
+                    <h1 class="certificate-title" style="font-size: 52px; font-weight: 900; color: white; margin: 0; letter-spacing: 5px; text-transform: uppercase; text-shadow: 0 3px 12px rgba(0,0,0,0.3);">
+                      CERTIFICATE
+                    </h1>
+                  </div>
+                </div>
+                <div style="width: 240px; height: 3px; background: linear-gradient(90deg, transparent, #daa520, #b8860b, #daa520, transparent); margin: 0 auto 0.5rem;"></div>
+                <div style="width: 180px; height: 2px; background: linear-gradient(90deg, transparent, #1e40af, #2563eb, #1e40af, transparent); margin: 0 auto 0.75rem;"></div>
+                <p class="certificate-body" style="font-size: 22px; color: #1e3a8a; margin: 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;">
+                  of Completion
+                </p>
+              </div>
+              
+              <div style="text-align: center; margin-bottom: 1rem;">
+                <p class="certificate-body" style="font-size: 14px; color: #334155; margin: 0 0 1rem 0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">
+                  This is proudly presented to
+                </p>
+                
+                <div style="position: relative; display: inline-block;">
+                  <div style="position: absolute; top: -6px; left: -12px; right: -12px; bottom: -6px; background: linear-gradient(135deg, rgba(218,165,32,0.1) 0%, rgba(184,134,11,0.1) 100%); border-radius: 0.875rem; transform: rotate(0.5deg);"></div>
+                  <div style="position: relative; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 1.25rem 3.5rem; border: 3px solid #daa520; border-radius: 0.875rem; box-shadow: 0 6px 20px rgba(218,165,32,0.25);">
+                    <div style="position: absolute; top: -2px; left: -2px; width: 20px; height: 20px; background: #1e3a8a; opacity: 0.15; border-radius: 0.25rem;"></div>
+                    <div style="position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px; background: #1e40af; opacity: 0.15; border-radius: 0.25rem;"></div>
+                    <h2 class="certificate-title" style="font-size: 38px; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: 1.5px; position: relative; z-index: 1;">
+                      ${attendanceData.fullName || "JUAN DELA CRUZ"}
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="text-align: center; max-width: 750px; margin: 0 auto 1rem;">
+                <p class="certificate-body" style="font-size: 13px; color: #475569; line-height: 1.6; margin: 0 0 0.5rem 0; font-weight: 500;">
+                  for successful participation and completion of the
+                </p>
+                <p class="certificate-body" style="font-size: 19px; color: #1e3a8a; font-weight: 800; margin: 0; line-height: 1.4; letter-spacing: 0.5px;">
+                  Service Excellence: A Guide to RA11032 Citizen's Charter
+                </p>
+              </div>
+              
+              <div style="position: relative; max-width: 800px; margin: 0 auto 1rem;">
+                <div style="background: white; border: 3px solid #1e40af; border-radius: 1rem; padding: 1rem 2rem; box-shadow: 0 6px 20px rgba(30,64,175,0.2); position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #daa520 0%, #b8860b 50%, #daa520 100%);"></div>
+                  <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #daa520 0%, #b8860b 50%, #daa520 100%);"></div>
+                  <p class="certificate-body" style="font-size: 12px; color: #1e293b; margin: 0; line-height: 1.8; text-align: center; font-weight: 500;">
+                    Given this <strong style="color: #1e3a8a; font-size: 13.5px;">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</strong><br>
+                    at The Columbia Tower, Department of Transportation,<br>
+                    Ortigas Ave., Brgy. Wack-Wack, Mandaluyong City
+                  </p>
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 0.65rem; justify-content: center; margin-bottom: 1.25rem; flex-wrap: wrap; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <div style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(30,58,138,0.35); border: 2px solid rgba(218,165,32,0.4);">
+                  <p style="font-size: 8px; margin: 0 0 0.25rem 0; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Competency Completed</p>
+                  <p style="font-size: 11px; margin: 0; font-weight: 800; letter-spacing: 0.2px;">Core Competency</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(30,64,175,0.35); border: 2px solid rgba(218,165,32,0.4);">
+                  <p style="font-size: 8px; margin: 0 0 0.25rem 0; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Level</p>
+                  <p style="font-size: 11px; margin: 0; font-weight: 800; letter-spacing: 0.2px;">Basic Level</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(37,99,235,0.35); border: 2px solid rgba(218,165,32,0.4);">
+                  <p style="font-size: 8px; margin: 0 0 0.25rem 0; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Training Duration</p>
+                  <p style="font-size: 11px; margin: 0; font-weight: 800; letter-spacing: 0.2px;">04 Hours</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); color: white; padding: 0.75rem 1.25rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(59,130,246,0.35); border: 2px solid rgba(218,165,32,0.4);">
+                  <p style="font-size: 8px; margin: 0 0 0.25rem 0; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Focus Area</p>
+                  <p style="font-size: 11px; margin: 0; font-weight: 800; letter-spacing: 0.2px;">Quality Management</p>
+                </div>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 140px 1fr 140px; gap: 1.5rem; align-items: end; width: 100%; max-width: 1000px; margin: 0 auto;">
+                <div style="text-align: center;">
+                  <div id="qrcode" style="display: inline-block; padding: 0.5rem; background: white; border: 3px solid #1e3a8a; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(30,58,138,0.3);"></div>
+                  <p style="font-size: 7.5px; color: #1e293b; margin-top: 0.5rem; font-weight: 700; line-height: 1.4; letter-spacing: 0.2px;">
+                    Verify Certificate<br>${currentDocId}
+                  </p>
+                </div>
+                
+                <div style="text-align: center;">
+                  <div style="position: relative; padding-top: 0.75rem;">
+                    <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; height: 3px; background: linear-gradient(90deg, transparent, #1e3a8a, #daa520, #1e3a8a, transparent);"></div>
+                    <div style="margin-top: 0.4rem;">
+                      <p class="certificate-body" style="font-size: 15px; font-weight: 900; color: #0f172a; margin: 0 0 0.4rem 0; text-transform: uppercase; letter-spacing: 0.75px;">
+                        ${signatoryName}
+                      </p>
+                      <p class="certificate-body" style="font-size: 10px; color: #334155; margin: 0; line-height: 1.5; white-space: pre-line; font-weight: 600; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        ${signatoryTitle}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style="text-align: center;">
+                  <div style="border: 3px solid #1e40af; border-radius: 0.75rem; padding: 0.75rem 0.5rem; background: linear-gradient(135deg, #eff6ff 0%, white 100%); box-shadow: 0 4px 12px rgba(30,64,175,0.25); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, #daa520, #b8860b, #daa520);"></div>
+                    <p style="font-size: 8px; color: #475569; margin: 0 0 0.3rem 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Issue Date</p>
+                    <p style="font-size: 10.5px; font-weight: 900; color: #1e3a8a; margin: 0; letter-spacing: 0.2px;">
+                      ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="no-print" style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button onclick="window.print()" 
+                    style="padding: 1.25rem 2.5rem; font-size: 18px; font-weight: 700; color: white; background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); border: none; border-radius: 0.75rem; cursor: pointer; box-shadow: 0 6px 20px rgba(37,99,235,0.4); transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;">
+              💾 Download Certificate
+            </button>
+            <button onclick="location.reload()" 
+                    style="padding: 1.25rem 2.5rem; font-size: 18px; font-weight: 700; color: white; background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); border: none; border-radius: 0.75rem; cursor: pointer; box-shadow: 0 6px 20px rgba(30,58,138,0.4); transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;">
+              ✓ Complete & Log Out
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    
+    // --- UPDATED ADMIN DASHBOARD ---
+    let adminView = 'list'; // 'list' or 'analytics'
+
+    function renderAdmin() {
+        return `
+        <div class="fade-in p-8 bg-slate-50 min-h-full">
+            <div class="max-w-7xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-sky-900">Admin Dashboard</h2>
+                    <div class="space-x-4">
+                        <button onclick="adminView='list'; render()" class="${adminView==='list'?'bg-sky-900 text-white':'bg-slate-200'} px-4 py-2 rounded font-bold transition">Trainee List</button>
+                        <button onclick="adminView='analytics'; renderAdminAnalytics()" class="${adminView==='analytics'?'bg-sky-900 text-white':'bg-slate-200'} px-4 py-2 rounded font-bold transition">Analytics</button>
+                        <button onclick="location.reload()" class="bg-red-500 text-white px-4 py-2 rounded font-bold transition">Logout</button>
+                    </div>
+                </div>
+                
+                <div id="admin-content">
+                    ${adminView === 'list' ? `
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                             <div class="p-6 bg-white border border-slate-200 rounded-lg text-center border-b-4 border-sky-900">
+                                <div class="text-3xl font-bold text-sky-900" id="total-users">0</div>
+                                <div>Total Trainees</div>
+                            </div>
+                             <div class="p-6 bg-white border border-slate-200 rounded-lg text-center border-b-4 border-sky-900">
+                                <div class="text-3xl font-bold text-sky-900" id="avg-eng">0%</div>
+                                <div>Avg AI Engagement</div>
+                            </div>
+                        </div>
+                        <table class="data-table">
+                            <thead><tr><th>Name</th><th>Pre-Test</th><th>Post-Test</th><th>Attempts (Total)</th><th>Status</th><th>Engagement</th><th>Action</th></tr></thead>
+                            <tbody id="admin-tbody"></tbody>
+                        </table>` 
+                    : '<div id="analytics-container">Loading Analytics...</div>'}
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // --- LOGIC HANDLERS ---
+    
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const btn = document.getElementById('loginBtn');
+        btn.innerText = "Loading...";
+        
+        try {
+            const snap = await db.collection('attendance_logs').where('email', '==', email).get();
+            if(!snap.empty) {
+                const d = snap.docs[0];
+                currentDocId = d.id;
+                attendanceData = { fullName: d.data().name };
+                currentScreen = 'welcome';
+            } else {
+                const doc = await db.collection('attendance_logs').add({
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    status: 'Started',
+                    ai_engagement: 100,
+                    attempts: {} // NEW: Initialize attempts
+                });
+                currentDocId = doc.id;
+                currentScreen = 'welcome';
+            }
+            render();
+        } catch(err) {
+            console.error(err);
+            alert("Connection Error. Check console.");
+            btn.innerText = "Continue →";
+        }
+    }
+
+    async function handleAttendance(e) {
+        e.preventDefault();
+        const name = document.getElementById('fname').value;
+        attendanceData.fullName = name.toUpperCase();
+        
+        await db.collection('attendance_logs').doc(currentDocId).update({
+            name: name,
+            gender: document.getElementById('gender').value,
+            employment: document.getElementById('emp').value,
+            position: document.getElementById('pos').value,
+            office: document.getElementById('off').value,
+            id_num: document.getElementById('idn').value,
+            mobile: document.getElementById('mob').value,
+            status: 'Pre-Test'
+        });
+        currentScreen = 'pretest';
+        render();
+    }
+
+    // --- PRETEST LOGIC ---
+    async function handlePretestAnswer(idx) {
+        const q = pretestMatchingQuestions[currentQuizQuestion];
+        if(idx === q.correct) pretestScore++;
+        
+        currentQuizQuestion++;
+        render();
+    }
+
+    function submitPretestPart2(e) {
+        e.preventDefault();
+        for(let i=0; i<5; i++) {
+            userPretestPart2Answers.push(document.getElementById(`pt2-${i}`).value);
+            const ansBool = document.getElementById(`pt2-${i}`).value === 'T';
+            if (ansBool === trueFalseKey[i]) pretestScore++;
+        }
+        currentQuizQuestion = 6; 
+        render();
+    }
+
+    async function submitPretestPart3() {
+        const ans = document.getElementById('scenarioAns').value.toLowerCase();
+        const keywords = ['handwritten', 'visible', 'vague', 'time', 'window', 'guard', 'checklist'];
+        let score = 0;
+        keywords.forEach(k => { if(ans.includes(k)) score++; });
+        if(score > 5) score = 5;
+        pretestScore += score;
+        
+        // NEW: Log Pretest Results
+        await db.collection('quiz_logs').add({
+            userId: currentDocId,
+            userName: attendanceData.fullName,
+            moduleName: "PRE-TEST",
+            score: pretestScore,
+            total: 15,
+            timestamp: new Date().toISOString()
+        });
+
+        await db.collection('attendance_logs').doc(currentDocId).update({ pretest_score: pretestScore });
+        alert(`Pre-test Complete. Score: ${pretestScore}/15. Proceeding to modules.`);
+        
+        currentQuizQuestion = 0;
+        currentScreen = 'modules';
+        render();
+    }
+
+    // --- MODULE LOGIC WITH RESPONSE TRACKING ---
+    function startModule(i) {
+        currentModule = i;
+        currentScreen = 'module-content';
+        render();
+    }
+
+    async function handleModuleAnswer(idx) {
+        const m = modules[currentModule];
+        const q = m.quiz[currentQuizQuestion];
+        
+        // NEW: Log the specific response
+        currentModuleResponses.push({
+            question: q.q,
+            selected: q.options[idx],
+            isCorrect: idx === q.correct
+        });
+
+        if (idx === q.correct) moduleQuizScores[currentModule]++;
+        
+        currentQuizQuestion++;
+        if(currentQuizQuestion >= m.quiz.length) {
+            // End of Quiz Logic
+            const passed = moduleQuizScores[currentModule] >= 8;
+            
+            // 1. Save detailed log to separate collection
+            await db.collection('quiz_logs').add({
+                userId: currentDocId,
+                userName: attendanceData.fullName,
+                moduleIndex: currentModule,
+                moduleName: m.title,
+                score: moduleQuizScores[currentModule],
+                passed: passed,
+                responses: currentModuleResponses, // Detailed tracking
+                timestamp: new Date().toISOString()
+            });
+
+            // 2. Update Attempts and Score in Main Doc
+            const userRef = db.collection('attendance_logs').doc(currentDocId);
+            const userSnap = await userRef.get();
+            let attempts = userSnap.data().attempts || {};
+            const modKey = `module_${currentModule+1}`;
+            attempts[modKey] = (attempts[modKey] || 0) + 1; // Increment attempt
+
+            if(passed) {
+                // Only update score if they passed (or update max score logic if preferred)
+                await userRef.update({ 
+                    [`module_${currentModule+1}`]: moduleQuizScores[currentModule],
+                    attempts: attempts
+                });
+                alert(`Module Passed! Score: ${moduleQuizScores[currentModule]}/10`);
+            } else {
+                await userRef.update({ attempts: attempts });
+                alert(`Failed. Score: ${moduleQuizScores[currentModule]}/10. You need 8/10. Retrying module...`);
+                moduleQuizScores[currentModule] = 0;
+            }
+            currentQuizQuestion = 0;
+            currentScreen = 'modules';
+        }
+        render();
+    }
+    
+    // --- POSTTEST LOGIC WITH RESPONSE TRACKING ---
+    let posttestScore = 0;
+    
+    function handlePosttestMatching(idx) {
+        const q = pretestMatchingQuestions[currentQuizQuestion];
+        // Store answer
+        userPosttestAnswers.push({ q: q.question, ans: q.options[idx], correct: idx === q.correct });
+        if(idx === q.correct) posttestScore++;
+        currentQuizQuestion++;
+        render();
+    }
+
+    function submitPosttestPart2() {
+        for(let i=0; i<5; i++) {
+            const val = document.getElementById(`post2-${i}`).value;
+            // Store answer
+            userPosttestAnswers.push({ q: trueFalseStatements[i], ans: val, correct: (val==='T') === trueFalseKey[i] });
+            const ansBool = val === 'T';
+            if (ansBool === trueFalseKey[i]) posttestScore++;
+        }
+        currentQuizQuestion = 6;
+        render();
+    }
+
+    async function submitPosttestFinal() {
+        const ans = document.getElementById('postScenarioAns').value.toLowerCase();
+        const keywords = ['handwritten', 'visible', 'vague', 'time', 'window', 'guard', 'checklist'];
+        let score = 0;
+        keywords.forEach(k => { if(ans.includes(k)) score++; });
+        if(score > 5) score = 5;
+        posttestScore += score;
+        
+        // Store scenario answer
+        userPosttestAnswers.push({ q: "Scenario Analysis", ans: ans, score: score });
+
+        // NEW: Log Detailed Post-Test
+        await db.collection('quiz_logs').add({
+            userId: currentDocId,
+            userName: attendanceData.fullName,
+            moduleName: "POST-TEST",
+            score: posttestScore,
+            total: 15,
+            responses: userPosttestAnswers,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Check for Passing Score
+        if(posttestScore >= 14) { 
+             await db.collection('attendance_logs').doc(currentDocId).update({ 
+                 posttest_score: posttestScore, 
+                 status: 'Completed', 
+                 ai_engagement: aiProctor.getEngagementScore()
+             });
+             alert(`Post-test Passed! Score: ${posttestScore}/15. Showing correct answers for review.`);
+             currentScreen = 'posttest-review';
+        } else {
+            alert(`Failed. Score: ${posttestScore}/15. You need 14 (90%) to pass. Please review and retry.`);
+            posttestScore = 0;
+            currentQuizQuestion = 0;
+            userPosttestAnswers = [];
+        }
+        render();
+    }
+
+    // --- EVALUATION ---
+    function rateItem(qIdx, val) {
+        document.getElementById(`eval-${qIdx}`).value = val;
+        const container = document.querySelector(`.rating-container[data-idx="${qIdx}"]`);
+        const stars = container.querySelectorAll('.rating-star');
+        stars.forEach((s, i) => {
+            if(i < val) { s.classList.remove('empty'); s.classList.add('filled'); }
+            else { s.classList.remove('filled'); s.classList.add('empty'); }
+        });
+    }
+
+    async function handleEvaluation(e) {
+        e.preventDefault();
+        const ratings = {};
+        for(let i=0; i<evaluationItems.length; i++) {
+            const val = document.getElementById(`eval-${i}`).value;
+            if(!val) { alert("Please rate all items."); return; }
+            ratings[`q${i}`] = val;
+        }
+        
+        await db.collection('evaluations').add({
+            userId: currentDocId,
+            name: attendanceData.fullName,
+            ratings: ratings,
+            date: new Date().toISOString()
+        });
+        
+        currentScreen = 'certificate';
+        render();
+    }
+
+    // --- ADMIN LOGIC ---
+    function verifyAdmin() {
+        if(document.getElementById('admin-pass').value === 'hrdd2O26') {
+            document.getElementById('login-modal').style.display = 'none';
+            currentScreen = 'admin';
+            render();
+            if(adminView === 'list') loadAdminData();
+            else renderAdminAnalytics(); // NEW: Load analytics if view selected
+        } else alert("Incorrect");
+    }
+
+    async function loadAdminData() {
+        const snap = await db.collection('attendance_logs').orderBy('timestamp', 'desc').get();
+        let html = '';
+        let total = 0, eng = 0;
+        snap.forEach(doc => {
+            const d = doc.data();
+            total++;
+            eng += (d.ai_engagement || 0);
+            
+            // Calculate Total Attempts
+            let totalAttempts = 0;
+            if(d.attempts) Object.values(d.attempts).forEach(v => totalAttempts += v);
+
+            html += `<tr>
+                <td>${d.name || d.email}</td>
+                <td>${d.pretest_score || '-'}</td>
+                <td>${d.posttest_score || '-'}</td>
+                <td>${totalAttempts}</td>
+                <td><span class="px-2 py-1 rounded text-xs font-bold ${d.status==='Completed'?'bg-green-100 text-green-800':'bg-yellow-100 text-yellow-800'}">${d.status}</span></td>
+                <td>${d.ai_engagement || 0}%</td>
+                <td><button onclick="showUserDetail('${doc.id}', '${d.name}')" class="text-sky-600 hover:underline text-sm font-bold">View Answers</button></td>
+            </tr>`;
+        });
+        document.getElementById('admin-tbody').innerHTML = html;
+        document.getElementById('total-users').innerText = total;
+        document.getElementById('avg-eng').innerText = total ? Math.round(eng/total) + '%' : '0%';
+    }
+    
+    // NEW: Analytics Calculation & Rendering
+    async function renderAdminAnalytics() {
+        if(adminView !== 'analytics') return;
+        const container = document.getElementById('analytics-container');
+        container.innerHTML = `<div class="p-4 text-center text-slate-500"><i class="fas fa-spinner fa-spin"></i> Calculating Analytics...</div>`;
+        
+        // Fetch all logs
+        const usersSnap = await db.collection('attendance_logs').get();
+        const quizSnap = await db.collection('quiz_logs').get();
+        
+        let totalUsers = 0, completed = 0;
+        let avgPre = 0, avgPost = 0, countPre = 0, countPost = 0;
+        
+        // Stats for Modules: [ {attempts, fails} ]
+        let moduleStats = [
+            {attempts:0, fails:0}, {attempts:0, fails:0}, {attempts:0, fails:0}, {attempts:0, fails:0}, {attempts:0, fails:0}
+        ];
+
+        usersSnap.forEach(doc => {
+            const d = doc.data();
+            totalUsers++;
+            if(d.status === 'Completed') completed++;
+            if(d.pretest_score) { avgPre += d.pretest_score; countPre++; }
+            if(d.posttest_score) { avgPost += d.posttest_score; countPost++; }
+        });
+        
+        quizSnap.forEach(doc => {
+            const d = doc.data();
+            // Check if it is a module quiz (0-4)
+            if(typeof d.moduleIndex === 'number' && d.moduleIndex >= 0 && d.moduleIndex < 5) {
+                moduleStats[d.moduleIndex].attempts++;
+                if(!d.passed) moduleStats[d.moduleIndex].fails++;
+            }
+        });
+
+        const safeAvg = (sum, count) => count ? (sum/count).toFixed(1) : 0;
+        
+        let html = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat-card">
+                <div class="stat-val text-sky-900">${completed} <span class="text-sm font-normal text-slate-500">/ ${totalUsers}</span></div>
+                <div class="stat-label">Completion Rate</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill bg-green-500" style="width: ${(completed/totalUsers)*100}%"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val text-amber-600">${safeAvg(avgPost, countPost)}</div>
+                <div class="stat-label">Avg Post-Test Score</div>
+                <p class="text-xs text-slate-400 mt-2">vs Pre-test: ${safeAvg(avgPre, countPre)}</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val text-purple-600">${safeAvg(avgPost - avgPre, countPost)}</div>
+                <div class="stat-label">Avg Learning Gain</div>
+            </div>
+        </div>
+
+        <h3 class="text-xl font-bold text-sky-900 mb-4 border-b pb-2">Module Difficulty Analysis</h3>
+        <div class="grid grid-cols-1 gap-4">`;
+        
+        moduleStats.forEach((stat, i) => {
+            const failRate = stat.attempts ? Math.round((stat.fails / stat.attempts) * 100) : 0;
+            const color = failRate > 50 ? 'bg-red-500' : (failRate > 20 ? 'bg-yellow-500' : 'bg-green-500');
+            
+            html += `
+            <div class="bg-white p-4 border rounded-lg shadow-sm">
+                <div class="flex justify-between mb-2">
+                    <span class="font-bold text-slate-700">Module ${i+1}: ${modules[i].title}</span>
+                    <span class="text-sm text-slate-500 font-medium">${stat.attempts} Total Attempts (${stat.fails} Retries)</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex-1 progress-bar-bg mt-0"><div class="progress-bar-fill ${color}" style="width: ${failRate}%"></div></div>
+                    <span class="text-sm font-bold ${failRate > 20 ? 'text-red-600' : 'text-green-600'} w-16 text-right">${failRate}% Fail</span>
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
+    // NEW: Show Detailed Answers Modal
+    async function showUserDetail(uid, name) {
+        const modal = document.getElementById('detail-modal');
+        const body = document.getElementById('modal-body');
+        document.getElementById('modal-title').innerText = `${name || "User"} - Response History`;
+        modal.style.display = 'flex';
+        body.innerHTML = `<div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading logs from database...</div>`;
+        
+        const logs = await db.collection('quiz_logs').where('userId', '==', uid).orderBy('timestamp', 'desc').get();
+        
+        if(logs.empty) { 
+            body.innerHTML = "No detailed quiz logs found for this user."; 
+            return; 
+        }
+        
+        let html = '<div class="space-y-4">';
+        logs.forEach(doc => {
+            const d = doc.data();
+            const dateStr = new Date(d.timestamp).toLocaleString();
+            const isPass = d.passed || d.moduleName.includes('TEST'); // Pre/Post don't have 'passed' boolean usually
+            
+            html += `
+            <div class="p-4 border rounded-lg bg-slate-50 hover:bg-white transition shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-bold text-sky-900">${d.moduleName}</h4>
+                    <span class="text-xs text-slate-400">${dateStr}</span>
+                </div>
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-semibold">Score: <span class="${isPass ? 'text-green-600':'text-red-600'}">${d.score}</span></span>
+                </div>
+                
+                ${d.responses ? `
+                <details class="text-sm border-t border-slate-200 pt-2">
+                    <summary class="cursor-pointer text-sky-600 font-medium hover:text-sky-800">View Question Breakdown</summary>
+                    <ul class="mt-2 space-y-2 pl-2">
+                        ${d.responses.map((r, i) => `
+                            <li class="p-2 rounded ${r.isCorrect ? 'bg-green-50' : 'bg-red-50'}">
+                                <p class="font-medium text-slate-700 mb-1">Q: ${r.question}</p>
+                                <p class="text-xs">
+                                    User Answer: <b>${typeof r.ans === 'object' ? JSON.stringify(r.ans) : (r.selected || r.ans)}</b>
+                                    ${r.isCorrect ? '<i class="fas fa-check text-green-600 ml-2"></i>' : '<i class="fas fa-times text-red-600 ml-2"></i>'}
+                                </p>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </details>` : ''}
+            </div>`;
+        });
+        html += '</div>';
+        body.innerHTML = html;
+    }
+
+    // Init
+    render();
+  </script>
+ </body>
+</html>
